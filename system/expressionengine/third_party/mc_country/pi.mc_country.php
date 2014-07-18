@@ -85,6 +85,69 @@ class Mc_country {
 		}
 	}
 
+	public function continent()
+	{
+		$this->EE =& get_instance();
+
+		$default = $this->EE->TMPL->fetch_param('default');
+		$redirect_continents = $this->EE->TMPL->fetch_param('continents');
+		$redirect_url = $this->EE->TMPL->fetch_param('redirect');
+		$debug = $this->EE->TMPL->fetch_param('debug');
+		$permitted = $this->EE->TMPL->fetch_param('permitted');
+		$tag_data = $this->EE->TMPL->tagdata;
+
+		if ($debug != '')
+		{
+			$continent = $debug;
+			$continent = $this->_continent($continent);
+		}
+		else
+		{
+			$ip = $_SERVER['REMOTE_ADDR'];
+			$country = $this->_find($ip, $default);
+			$continent = $this->_continent($country);
+		}
+
+		// If redirect parameter is supplied
+		if ($redirect_url != '')
+		{
+
+			// if user's continent is in list of continent to redirect
+			if (strpos($redirect_continents, $continent) !== FALSE)
+			{
+
+				$current_url = $_SERVER['REQUEST_URI'];
+				$redirect_url = html_entity_decode($redirect_url);
+
+				// make sure we don't enter an infinite loop
+				if ($redirect_url != $current_url)
+				{
+					// redirect to url
+					header("Location: ".$redirect_url);
+					exit;
+				}
+
+			}
+
+		}
+		elseif ($tag_data != '')
+		{
+			// if user's continent is in list
+			if (strpos($redirect_continents, $continent) !== FALSE)
+			{
+				$this->return_data = $tag_data;
+			}
+		}
+		else
+		{
+			// just return the continent code
+			$this->return_data = $continent;
+		}
+		return $this->return_data;
+	}
+	
+	
+	
 	// ----------------------------------------------------------------------
 
 	/**
@@ -126,6 +189,276 @@ class Mc_country {
 
 	// ----------------------------------------------------------------------
 
+	/**
+	 * Map country code to continent
+	 */
+	private function _continent($country)
+	{
+		// source: http://www.countrycallingcodes.com/iso-country-codes/
+		switch(strtoupper($country)){
+			case 'DZ':
+			case 'AO':
+			case 'SH':
+			case 'BJ':
+			case 'BW':
+			case 'BF':
+			case 'BI':
+			case 'CM':
+			case 'CV':
+			case 'CF':
+			case 'TD':
+			case 'KM':
+			case 'CG':
+			case 'DJ':
+			case 'EG':
+			case 'GQ':
+			case 'ER':
+			case 'ET':
+			case 'GA':
+			case 'GM':
+			case 'GH':
+			case 'GW':
+			case 'GN':
+			case 'CI':
+			case 'KE':
+			case 'LS':
+			case 'LR':
+			case 'LY':
+			case 'MG':
+			case 'MW':
+			case 'ML':
+			case 'MR':
+			case 'MU':
+			case 'YT':
+			case 'MA':
+			case 'MZ':
+			case 'NA':
+			case 'NE':
+			case 'NG':
+			case 'ST':
+			case 'RE':
+			case 'RW':
+			case 'ST':
+			case 'SN':
+			case 'SC':
+			case 'SL':
+			case 'SO':
+			case 'ZA':
+			case 'SH':
+			case 'SD':
+			case 'SZ':
+			case 'TZ':
+			case 'TG':
+			case 'TN':
+			case 'UG':
+			case 'CD':
+			case 'ZM':
+			case 'TZ':
+			case 'ZW':
+			case 'SS':
+			case 'CD':
+				return 'af';
+			case 'AQ':
+				return 'an';
+			case 'AF':
+			case 'AM':
+			case 'AZ':
+			case 'BH':
+			case 'BD':
+			case 'BT':
+			case 'BN':
+			case 'KH':
+			case 'CN':
+			case 'CX':
+			case 'CC':
+			case 'IO':
+			case 'GE':
+			case 'HK':
+			case 'IN':
+			case 'ID':
+			case 'IR':
+			case 'IQ':
+			case 'IL':
+			case 'JP':
+			case 'JO':
+			case 'KZ':
+			case 'KP':
+			case 'KR':
+			case 'KW':
+			case 'KG':
+			case 'LA':
+			case 'LB':
+			case 'MO':
+			case 'MY':
+			case 'MV':
+			case 'MN':
+			case 'MM':
+			case 'NP':
+			case 'OM':
+			case 'PK':
+			case 'PH':
+			case 'QA':
+			case 'SA':
+			case 'SG':
+			case 'LK':
+			case 'SY':
+			case 'TW':
+			case 'TJ':
+			case 'TH':
+			case 'TR':
+			case 'TM':
+			case 'AE':
+			case 'UZ':
+			case 'VN':
+			case 'YE':
+			case 'PS':
+				return 'as';
+			case 'AS':
+			case 'AU':
+			case 'NZ':
+			case 'CK':
+			case 'FJ':
+			case 'PF':
+			case 'GU':
+			case 'KI':
+			case 'MP':
+			case 'MH':
+			case 'FM':
+			case 'UM':
+			case 'NR':
+			case 'NC':
+			case 'NZ':
+			case 'NU':
+			case 'NF':
+			case 'PW':
+			case 'PG':
+			case 'MP':
+			case 'SB':
+			case 'TK':
+			case 'TO':
+			case 'TV':
+			case 'VU':
+			case 'UM':
+			case 'WF':
+			case 'WS':
+			case 'TL':
+				return 'oc';
+			case 'AL':
+			case 'AD':
+			case 'AT':
+			case 'BY':
+			case 'BE':
+			case 'BA':
+			case 'BG':
+			case 'HR':
+			case 'CY':
+			case 'CZ':
+			case 'DK':
+			case 'EE':
+			case 'FO':
+			case 'FI':
+			case 'FR':
+			case 'DE':
+			case 'GI':
+			case 'GR':
+			case 'HU':
+			case 'IS':
+			case 'IE':
+			case 'IT':
+			case 'LV':
+			case 'LI':
+			case 'LT':
+			case 'LU':
+			case 'MK':
+			case 'MT':
+			case 'MD':
+			case 'MC':
+			case 'NL':
+			case 'NO':
+			case 'PL':
+			case 'PT':
+			case 'RO':
+			case 'RU':
+			case 'SM':
+			case 'RS':
+			case 'SK':
+			case 'SI':
+			case 'ES':
+			case 'SE':
+			case 'CH':
+			case 'UA':
+			case 'GB':
+			case 'VA':
+			case 'RS':
+			case 'IM':
+			case 'RS':
+			case 'ME':
+				return 'eu';
+			case 'AI':
+			case 'AG':
+			case 'AW':
+			case 'BS':
+			case 'BB':
+			case 'BZ':
+			case 'BM':
+			case 'VG':
+			case 'CA':
+			case 'KY':
+			case 'CR':
+			case 'CU':
+			case 'CW':
+			case 'DM':
+			case 'DO':
+			case 'SV':
+			case 'GL':
+			case 'GD':
+			case 'GP':
+			case 'GT':
+			case 'HT':
+			case 'HN':
+			case 'JM':
+			case 'MQ':
+			case 'MX':
+			case 'PM':
+			case 'MS':
+			case 'CW':
+			case 'KN':
+			case 'NI':
+			case 'PA':
+			case 'PR':
+			case 'KN':
+			case 'LC':
+			case 'PM':
+			case 'VC':
+			case 'TT':
+			case 'TC':
+			case 'VI':
+			case 'US':
+			case 'SX':
+			case 'BQ':
+			case 'SA':
+			case 'SE':
+				return 'na';
+			case 'AR':
+			case 'BO':
+			case 'BR':
+			case 'CL':
+			case 'CO':
+			case 'EC':
+			case 'FK':
+			case 'GF':
+			case 'GY':
+			case 'PY':
+			case 'PE':
+			case 'SR':
+			case 'UY':
+			case 'VE':
+				return 'sa';
+			default:
+				return '';
+		}
+	}
+	
 	/**
 	 * Get a country by ip address
 	 */
@@ -271,12 +604,74 @@ OPTIONAL PARAMETERS:
 debug = Force a specific two-letter country code. Useful when working locally (IPs won't resolve to correct country on your local network).
 
 ==================================================
+5) OUTPUT CONTINENT CODE
+==================================================
+
+To output just the two-letter countinent code, place the following tag in any of your templates:
+
+{exp:mc_country:continent}
+
+REQUIRED PARAMETERS:
+
+None.
+
+OPTIONAL PARAMETERS:
+
+default = If a visitor's IP cannot be located, the continent code will default to this value.
+
+debug = Force a specific two-letter country code. Useful when working locally (IPs won't resolve to the correct country on your local network).
+
+==================================================
+6) CONTINENT BASED REDIRECT:
+==================================================
+Same as for countries (see above):
+
+    {exp:mc_country:continent continents="xx|xx|xx"}
+         Content here
+    {/exp:mc_country:continent}
+
+REQUIRED PARAMETERS:
+
+continents = List each two-letter continent code separated by |
+
+redirect = The url to redirect to if user is from one of the specified continents.
+
+OPTIONAL PARAMETERS:
+
+default = If the IP cannot be located, continent code will default to this value. Useful when working locally on your own machine.
+
+debug = Force a specific two-letter country code. Useful when working locally (IPs won't resolve to the correct country on your local network).
+
+==================================================
+7) CONTINENT SPECIFIC CONTENT:
+==================================================
+Same as for countries (see above):
+
+    {exp:mc_country:continent continents="xx|xx|xx"}
+         Content here
+    {/exp:mc_country:continent}
+
+REQUIRED PARAMETERS:
+
+countries = List each two-letter country code separated by |
+
+OPTIONAL PARAMETERS:
+
+debug = Force a specific two-letter country code. Useful when working locally (IPs won't resolve to the correct country on your local network).
+
+==================================================
 EXAMPLES
 ==================================================
 
 Output two digit country code, defaulting to US:
 
 {exp:mc_country default="us"}
+
+--------------------------------------------------
+
+Output two digit continent code, defaulting to EU:
+
+{exp:mc_country:continent default="eu"}
 
 --------------------------------------------------
 
