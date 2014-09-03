@@ -10,7 +10,7 @@
 
 $plugin_info = array(
 	'pi_name'       => 'MC Country',
-	'pi_version'    => '1.0',
+	'pi_version'    => '1.0.1',
 	'pi_author'     => 'Michael Cohen',
 	'pi_author_url' => 'http://www.pro-image.co.il',
 	'pi_description'=> "Detect user's country using IP2Nation module",
@@ -128,10 +128,15 @@ class Mc_country {
 
 	/**
 	 * Get a country by ip address
+	 * Adapted from a function in system/expressionengine/modules/ip_to_nation/models/ip_to_nation_data.php
 	 */
 	private function _find($ip, $default)
 	{
 		$BIN = $this->_to_binary($ip);
+
+		// If IP contains 39 or 92, we end up with ASCII quote or backslash
+		// Let's be sure to escape!
+		$BIN = $this->EE->db->escape_str($BIN);
 
 		$query = $this->EE->db
 			->select('country')
@@ -161,6 +166,7 @@ class Mc_country {
 
 	/**
 	 * Convert an IP address to its IPv6 packed format
+	 * Adapted from a function in system/expressionengine/modules/ip_to_nation/models/ip_to_nation_data.php
 	 */
 	private function _to_binary($addr)
 	{
