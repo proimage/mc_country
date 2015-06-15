@@ -10,7 +10,7 @@
 
 $plugin_info = array(
 	'pi_name'       => 'MC Country',
-	'pi_version'    => '1.1',
+	'pi_version'    => '1.1.0',
 	'pi_author'     => 'Michael Cohen',
 	'pi_author_url' => 'http://www.pro-image.co.il',
 	'pi_description'=> "Detect user's country using IP2Nation module",
