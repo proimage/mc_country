@@ -10,7 +10,7 @@
 
 $plugin_info = array(
 	'pi_name'       => 'MC Country',
-	'pi_version'    => '1.0.1',
+	'pi_version'    => '1.1',
 	'pi_author'     => 'Michael Cohen',
 	'pi_author_url' => 'http://www.pro-image.co.il',
 	'pi_description'=> "Detect user's country using IP2Nation module",
@@ -21,6 +21,7 @@ $plugin_info = array(
 class Mc_country {
 
 	public $return_data;
+	var $countries;
 
 	// --------------------------------------------------------------------
 
@@ -30,6 +31,9 @@ class Mc_country {
 	public function __construct()
 	{
 		$this->EE =& get_instance();
+
+		// Get list of countries
+		require(PATH_THIRD.'mc_country/libraries/countries.php');
 
 		$default = $this->EE->TMPL->fetch_param('default');
 		$redirect_countries = $this->EE->TMPL->fetch_param('countries');
@@ -88,6 +92,64 @@ class Mc_country {
 	// ----------------------------------------------------------------------
 
 	/**
+	 * Parse tagdata to return country code and name
+	 */
+	public function pair()
+	{
+		$debug = ee()->TMPL->fetch_param('debug');
+		$permitted = ee()->TMPL->fetch_param('permitted');
+		$code_case = ee()->TMPL->fetch_param('code_case');
+		$tag_data = ee()->TMPL->tagdata;
+
+		if ($debug != '')
+		{
+			// Debug mode - use manually-specified country
+			$detected[0]['country_code'] = $debug;
+		}
+		else
+		{
+			// Get country from detected IP
+			$ip = $_SERVER['REMOTE_ADDR'];
+			$detected[0]['country_code'] = $this->_find($ip);
+		}
+
+		// Get country name
+		if (isset($this->countries[strtoupper($detected[0]['country_code'])]))
+		{
+			$detected[0]['country_name'] = $this->countries[strtoupper($detected[0]['country_code'])];
+		}
+		else
+		{
+			$this->EE->TMPL->log_item('MC Country: Unable to find matching country name for country code: ' . $detected[0]['country_code']);
+		}
+
+		// Set code case
+		if ($code_case == 'upper' OR $code_case == 'uppercase')
+		{
+			$detected[0]['country_code'] = strtoupper($detected[0]['country_code']);
+		}
+		elseif ($code_case == 'upper' OR $code_case == 'uppercase')
+		{
+			$detected[0]['country_code'] = strtolower($detected[0]['country_code']);
+		}
+
+		// Parse tag data
+		if ($tag_data)
+		{
+			$output = ee()->TMPL->parse_variables(ee()->TMPL->tagdata, $detected);
+			// $output = "<pre>" . var_export($detected, true) . "</pre>"; // Debug
+			return $output;
+		}
+		else
+		{
+			$this->EE->TMPL->log_item('MC Country: {exp:mc_country:pair} tag found but closing tag was missing.');
+		}
+
+	}
+
+	// ----------------------------------------------------------------------
+
+	/**
 	 * Return user country if it matches a restricted set, or default otherwise.
 	 */
 	public function restrict()
@@ -110,7 +172,7 @@ class Mc_country {
 		else
 		{
 			$ip = $_SERVER['REMOTE_ADDR'];
-			$country = $this->_find($ip, $default);
+			$country = $this->_find($ip);
 		}
 
 		// Check if the user's detected country matches an allowed value
@@ -130,7 +192,7 @@ class Mc_country {
 	 * Get a country by ip address
 	 * Adapted from a function in system/expressionengine/modules/ip_to_nation/models/ip_to_nation_data.php
 	 */
-	private function _find($ip, $default)
+	private function _find($ip, $default = '')
 	{
 		$BIN = $this->_to_binary($ip);
 
@@ -275,6 +337,31 @@ default = If IP cannot be located, country code will default to this value. Note
 OPTIONAL PARAMETERS:
 
 debug = Force a specific two-letter country code. Useful when working locally (IPs won't resolve to correct country on your local network).
+
+==================================================
+5) COUNTRY DETECTION TAG PAIR
+==================================================
+
+Using the tag pair can give more flexibility in parsing the results of the country detection. It also gives you access to the country name in addition to the code, and allows you to determine whether the code should be returned as upper- or lowercase.
+
+    {exp:mc_country:pair case="upper"}
+		The country code "{country_code}" belongs to {country_name}
+    {/exp:mc_country:pair}
+
+REQUIRED PARAMETERS:
+
+None
+
+OPTIONAL PARAMETERS:
+
+case = Return the {country_code} value as uppercase (code_case="upper" or code_case="uppercase") or lowercase (default, can also be specified as code_case="lower")
+
+debug = Force a specific two-letter country code. Useful when working locally (IPs won't resolve to correct country on your local network).
+
+VARIABLES:
+{country_code} - The two-letter country code
+
+{country_name} - The English name of the detected country.
 
 ==================================================
 EXAMPLES
