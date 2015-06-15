@@ -262,7 +262,7 @@ This plugin requires the "IP to Nation" module
 ==================================================
 
 
-This plugin has four main features:
+This plugin has five main features:
 
 ==================================================
 1) OUTPUT COUNTRY CODE
