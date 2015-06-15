@@ -354,7 +354,7 @@ None
 
 OPTIONAL PARAMETERS:
 
-case = Return the {country_code} value as uppercase (code_case="upper" or code_case="uppercase") or lowercase (default, can also be specified as code_case="lower")
+code_case = Return the {country_code} value as uppercase (code_case="upper" or code_case="uppercase") or lowercase (default, can also be specified as code_case="lower")
 
 debug = Force a specific two-letter country code. Useful when working locally (IPs won't resolve to correct country on your local network).
 
@@ -412,6 +412,14 @@ If a visitor is detected as being in Canada, the output would be:
 If a visitor is detected as being in Germany, which is not in the specified list of allowed countries, the output would default to:
 
     us
+
+--------------------------------------------------
+
+Display country name and code using the tag pair:
+
+    {exp:mc_country:pair code_case="upper"}
+        The country code for {country_name} is {country_code}
+    {/exp:mc_country:pair}
 
 ==================================================
 COUNTRY CODES
