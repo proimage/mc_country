@@ -10,7 +10,7 @@
 
 $plugin_info = array(
 	'pi_name'       => 'MC Country',
-	'pi_version'    => '1.1.0',
+	'pi_version'    => '1.1.1',
 	'pi_author'     => 'Michael Cohen',
 	'pi_author_url' => 'http://www.pro-image.co.il',
 	'pi_description'=> "Detect user's country using IP2Nation module",
@@ -326,11 +326,11 @@ debug = Force a specific two-letter country code. Useful when working locally (I
 
 This feature allows you to restrict which countries visitors are detected from to a specified subset. If a visitor is from one of the allowed countries, it outputs that country. If a visitor is from a country not specified in the subset of allowed countries, it outputs the specified default country. See the examples below for ideas on how to use this feature.
 
-    {exp:mc_country:restrict allowed="xx|xx|xx" default="xx"}
+    {exp:mc_country:restrict allow="xx|xx|xx" default="xx"}
 
 REQUIRED PARAMETERS:
 
-allowed = List each two-letter country code separated by |
+allow = List each two-letter country code separated by |
 
 default = If IP cannot be located, country code will default to this value. Note that the default country should typically also be listed among the allowed countries.
 
@@ -401,7 +401,7 @@ Show certain content to visitors from the US, Canada, and Mexico:
 
 Figure out which branch of an organization to use for a visitor:
 
-    {exp:mc_country:restrict allowed="us|ca|uk|jp" default="us"}
+    {exp:mc_country:restrict allow="us|ca|uk|jp" default="us"}
 
 OUTPUT:
 
