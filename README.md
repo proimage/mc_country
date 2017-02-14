@@ -1,7 +1,7 @@
 MC Country
 ==========
 
-An ExpressionEngine 2 plugin that uses the IP2Nation module to detect and output a visitor's country (the ISO country code) from their IP. Can optionally display content or redirect to a URL if a visitor is from a specified list of countries. Based on OpenMotive's Country plugin (see credits).
+An ExpressionEngine 2 and 3 plugin that uses the IP2Nation module to detect and output a visitor's country (the ISO country code) from their IP. Can optionally display content or redirect to a URL if a visitor is from a specified list of countries. Based on OpenMotive's Country plugin (see credits).
 
 
 **PLEASE NOTE:**
